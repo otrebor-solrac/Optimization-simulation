@@ -1,0 +1,29 @@
+services:
+  sudoku-ga:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sudoku-ga-rust:latest
+    container_name: sudoku_ga_visualizer
+    entrypoint: []
+    stdin_open: true
+    tty: true
+    ipc: host
+    network_mode: host
+    environment:
+      - DISPLAY=${DISPLAY:-:1}
+      - XDG_RUNTIME_DIR=/tmp
+      - RUST_BACKTRACE=1
+      - PYTHONUNBUFFERED=1
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - .:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+      - cargo-cache:/usr/local/cargo/registry
+      - cargo-target:/app/ui_rust/target
+    working_dir: /app
+
+volumes:
+  cargo-cache:
+  cargo-target:
